@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "181616050632",
+    "firebase_url": "https://cyber2021finalalpha.firebaseio.com",
+    "project_id": "cyber2021finalalpha",
+    "storage_bucket": "cyber2021finalalpha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181616050632:android:2a319ae7178119f10000fd",
+        "android_client_info": {
+          "package_name": "adudecalledleo.cyber2021finalalpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181616050632-vacreo5h5p5vbkma7fl2pq6mc54ib9r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLd5jYB6_ABgq9zRXZCbQbxuK6ymv0QD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181616050632-vacreo5h5p5vbkma7fl2pq6mc54ib9r9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

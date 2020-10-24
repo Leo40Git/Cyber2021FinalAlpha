@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AuthActivity"
+        android:orientation="vertical" >
+
+    <TextView
+            android:text="Phone Number:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/etPhone" />
+
+    <Button
+            android:text="Authenticate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAuth"
+            android:onClick="onClick_btnAuth" />
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layEnterCode"
+            android:visibility="gone">
+
+        <TextView
+                android:text="Verification Code:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberPassword"
+                android:ems="10"
+                android:id="@+id/etVerifyCode" />
+
+        <Button
+                android:text="Verify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnVerify"
+                android:onClick="obClick_btnVerify" />
+    </LinearLayout>
+</LinearLayout>
