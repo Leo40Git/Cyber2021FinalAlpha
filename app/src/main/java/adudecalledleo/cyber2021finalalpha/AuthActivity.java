@@ -1,10 +1,8 @@
 package adudecalledleo.cyber2021finalalpha;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +10,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -24,6 +24,7 @@ public class AuthActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String verificationId;
     private PhoneAuthProvider.ForceResendingToken resendToken;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
 
     private EditText etPhone;
     private LinearLayout layEnterCode;
@@ -34,6 +35,33 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        verificationId = null;
+        resendToken = null;
+        callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                    @NonNull PhoneAuthProvider.ForceResendingToken resendToken) {
+                AuthActivity.this.verificationId = verificationId;
+                AuthActivity.this.resendToken = resendToken;
+                runOnUiThread(() -> {
+                    etVerifyCode.setText("");
+                    layEnterCode.setVisibility(View.VISIBLE);
+                });
+            }
+
+            @Override
+            public void onVerificationCompleted(
+                    @NonNull PhoneAuthCredential phoneAuthCredential) {
+                signInWithPhoneCred(phoneAuthCredential);
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+                Toast.makeText(AuthActivity.this,
+                        "Failed to verify phone number: " + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        };
 
         setContentView(R.layout.activity_auth);
         etPhone = findViewById(R.id.etPhone);
@@ -65,56 +93,49 @@ public class AuthActivity extends AppCompatActivity {
 
     public void onClick_btnAuth(View btnAuth) {
         PhoneAuthProvider.getInstance(firebaseAuth).verifyPhoneNumber(etPhone.getText().toString(),
-                30L, TimeUnit.SECONDS, this,
-                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                    @Override
-                    public void onCodeSent(@NonNull String verificationId,
-                            @NonNull PhoneAuthProvider.ForceResendingToken resendToken) {
-                        AuthActivity.this.verificationId = verificationId;
-                        AuthActivity.this.resendToken = resendToken;
-                        runOnUiThread(() -> {
-                            etVerifyCode.setText("");
-                            layEnterCode.setVisibility(View.VISIBLE);
-                        });
-                    }
-
-                    @Override
-                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        signInWithPhoneCred(phoneAuthCredential);
-                    }
-
-                    @Override
-                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                        Toast.makeText(AuthActivity.this, "Failed to verify phone number: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+                60L, TimeUnit.SECONDS, this, callbacks);
     }
 
     public void obClick_btnVerify(View view) {
-        signInWithPhoneCred(PhoneAuthProvider.getCredential(verificationId, etVerifyCode.getText().toString()));
+        if (verificationId == null)
+            return;
+        signInWithPhoneCred(
+                PhoneAuthProvider.getCredential(verificationId, etVerifyCode.getText().toString()));
+    }
+
+    public void onClick_btnResend(View view) {
+        if (resendToken == null)
+            return;
+        PhoneAuthProvider.getInstance(firebaseAuth).verifyPhoneNumber(etPhone.getText().toString(),
+                60L, TimeUnit.SECONDS, this, callbacks, resendToken);
     }
 
     private void signInWithPhoneCred(PhoneAuthCredential phoneCred) {
         firebaseAuth.signInWithCredential(phoneCred)
                 .addOnCompleteListener(task -> {
-                  if (task.isSuccessful() && task.getResult() != null) {
-                      runOnUiThread(() -> {
-                          etVerifyCode.setText("");
-                          layEnterCode.setVisibility(View.GONE);
-                      });
-                      String username = "<unnamed>";
-                      if (task.getResult() != null && task.getResult().getUser() != null)
-                          username = task.getResult().getUser().getDisplayName();
-                      Toast.makeText(AuthActivity.this, "Successfully signed in as: " + username,
-                              Toast.LENGTH_LONG).show();
-                  } else {
-                      String message = "unknown error";
-                      if (task.getException() != null)
-                          message = task.getException().getMessage();
-                      Toast.makeText(AuthActivity.this, "Failed to sign in: " + message,
-                              Toast.LENGTH_LONG).show();
-                  }
+                    verificationId = null;
+                    resendToken = null;
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        runOnUiThread(() -> {
+                            etVerifyCode.setText("");
+                            layEnterCode.setVisibility(View.GONE);
+                        });
+                        String username = "<unnamed>";
+                        if (task.getResult() != null && task.getResult().getUser() != null)
+                            username = task.getResult().getUser().getDisplayName();
+                        Toast.makeText(AuthActivity.this, "Successfully signed in as: " + username,
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        String message = "unknown error";
+                        if (task.getException() != null) {
+                            Exception e = task.getException();
+                            Log.e("AuthActivity", "Firebase sign in failed with exception", e);
+                            message = e.getMessage();
+                        } else
+                            Log.e("AuthActivity", "Firebase sign in failed without exception");
+                        Toast.makeText(AuthActivity.this, "Failed to sign in: " + message,
+                                Toast.LENGTH_LONG).show();
+                    }
                 });
     }
 }

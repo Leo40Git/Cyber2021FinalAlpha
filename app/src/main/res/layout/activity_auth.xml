@@ -9,8 +9,9 @@
 
     <TextView
             android:text="Phone Number:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
 
     <EditText
             android:layout_width="match_parent"
@@ -35,8 +36,9 @@
 
         <TextView
                 android:text="Verification Code:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
 
         <EditText
                 android:layout_width="match_parent"
@@ -51,5 +53,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnVerify"
                 android:onClick="obClick_btnVerify" />
+
+        <TextView
+                android:text="Didn't get a code?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+        <Button
+                android:text="Resend Verification Code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnResend"
+                android:onClick="onClick_btnResend" />
     </LinearLayout>
 </LinearLayout>
