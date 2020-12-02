@@ -122,7 +122,7 @@ public class AuthActivity extends AppCompatActivity {
                         });
                         String username = "<unnamed>";
                         if (task.getResult() != null && task.getResult().getUser() != null)
-                            username = task.getResult().getUser().getDisplayName();
+                            username = task.getResult().getUser().getPhoneNumber();
                         Toast.makeText(AuthActivity.this, "Successfully signed in as: " + username,
                                 Toast.LENGTH_LONG).show();
                     } else {

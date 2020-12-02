@@ -10,28 +10,27 @@
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/imageView" />
+
+    <TextView
+            android:text="Upload and download an image!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/tvInstruct" />
 
     <Button
             android:text="Upload Image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnUpload" />
+            android:id="@+id/btnUpload"
+            android:onClick="onClick_btnUpload" />
 
     <Button
             android:text="Download Image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnDownload" />
+            android:id="@+id/btnDownload"
+            android:onClick="onClick_btnDownload" />
 
-    <TextView
-            android:text='Please authenticate using the "Authenticate" screen first!'
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvAuthAlert"
-            android:layout_gravity="center_horizontal"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/design_default_color_error" />
 </LinearLayout>
